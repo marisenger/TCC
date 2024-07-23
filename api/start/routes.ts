@@ -22,6 +22,7 @@ const FuncionariosController = () => import('#controllers/funcionarios_controlle
 const AdministradoresController = () => import('#controllers/administradores_controller')
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from '#start/kernel'
 
 router.get('/', async () => {
   return {
@@ -61,6 +62,7 @@ router.post('funcionarios/:pessoa_id/:clinica_id/:administrador_id', [Funcionari
 
 //ROTA DA PESSOA
 router.resource('/pessoas', PessoasController).apiOnly()
+router.post('/login', [PessoasController, 'login'])
 
 //ROTAS DO REGISTRO
 router.resource('/registros', RegistroController).apiOnly()
@@ -79,7 +81,19 @@ router.resource('/voluntarios', VoluntarioController).apiOnly()
 router.post('/voluntarios/:funcionario_id', [VoluntarioController, 'store'])
 
 
-
+/**
+ * TODO
+ * utilizar os middleware para verificação de rotas
+ * pedir ajuda do vitinho
+ */
+router.get('/todasPessoasTeste',  async ({ auth }) => {
+  console.log(auth.user) // User
+  console.log(auth.authenticatedViaGuard) // 'api'
+  console.log(auth.user!.currentAccessToken) // AccessToken
+})
+.use(middleware.auth({
+  guards: ['api']
+}))
 
 
 

@@ -54,6 +54,17 @@ export default class PessoasController {
     return pessoa
   }
 
+  async login({request}: HttpContext){
+    const body = request.body()
+
+    const id = body.id
+    const pessoa =  await Pessoa.findOrFail(id)
+    console.log(pessoa)
+    const token = await Pessoa.accessTokens.create(pessoa)
+
+    return token
+  }
+
   async destroy({ params }: HttpContext) {
     const pessoa = await Pessoa.findOrFail(params.id)
     pessoa.deletadoEm = DateTime.now()

@@ -11,15 +11,17 @@ export default class extends BaseSchema {
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('users')
+        .inTable('pessoas')
         .onDelete('CASCADE')
 
       table.string('type').notNullable()
       table.string('name').nullable()
       table.string('hash').notNullable()
       table.text('abilities').notNullable()
-      table.timestamp('criado_em')
-      table.timestamp('deletado_em')
+      table.timestamp('created_at')
+      table.timestamp('updated_at')
+      table.timestamp('last_used_at').nullable()
+      table.timestamp('expires_at').nullable()
     })
   }
 
