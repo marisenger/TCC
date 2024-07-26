@@ -1,6 +1,12 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Pessoa from '#models/pessoa'
 import { DateTime } from 'luxon'
+import Pessoa from "#models/pessoa"
+import Voluntario from "#models/voluntario"
+import Cliente from "#models/cliente"
+import Veterinario from "#models/veterinario"
+import Administrador from "#models/administrador"
+import Funcionario from "#models/funcionario"
+
 /* TODO
   Organizar o select{
     não deve aparecer os deletados
@@ -15,7 +21,7 @@ export default class PessoasController {
     return pessoas
   }
 
-  async store({ request }: HttpContext) {
+  async criar({ request, params }: HttpContext) {
     const body = request.body()
     let pessoa = new Pessoa()
     pessoa.nome = body.nome
@@ -29,7 +35,61 @@ export default class PessoasController {
 
     await pessoa.save()
 
-    return pessoa
+    let voluntario = new Voluntario()
+    let cliente = new Cliente()
+    let veterinario = new Veterinario()
+    let administrador = new Administrador()
+    let funcionario = new Funcionario()
+
+    switch (params.perfil) {
+      case 'adm':
+        administrador.pessoa_id = pessoa.id
+        administrador.clinica_id = body.clinica_id
+        administrador.criadoEm = DateTime.now()
+
+        await administrador.save()
+        return administrador
+
+        break
+      case 'func':
+        funcionario.pessoa_id = pessoa.id
+        funcionario.clinica_id = body.clinica_id
+        funcionario.administrador_id = body.administrador_id
+        funcionario.salario = body.salario
+        funcionario.criadoEm = DateTime.now()
+
+        await funcionario.save()
+
+        return funcionario
+
+        break
+      case 'vet':
+        veterinario.funcionario_id = body.funcionario_id
+        veterinario.crmv = body.crmv
+        veterinario.criadoEm = DateTime.now()
+
+        await veterinario.save()
+
+        return veterinario
+
+        break
+      case 'vol':
+        voluntario.funcionario_id = body.funcionario_id
+        voluntario.criadoEm = DateTime.now()
+
+        await voluntario.save()
+        return voluntario
+        break
+      case 'cli':
+        cliente.pessoa_id = pessoa.id
+        cliente.clinica_id = body.clinica_id
+        cliente.criadoEm = DateTime.now()
+
+        await cliente.save()
+
+        return cliente
+        break
+    }
   }
 
   async show({ params }: HttpContext) {
@@ -38,10 +98,10 @@ export default class PessoasController {
     return pessoa
   }
 
-  async update({ params, request }: HttpContext) {
+  async atualizar({ request }: HttpContext) {
     const body = request.body()
-    const pessoa = await Pessoa.findOrFail(params.id)
-    
+    const pessoa = await Pessoa.findOrFail(body.id)
+    console.log(pessoa)
     pessoa.nome = body.nome
     pessoa.cpf = body.cpf
     pessoa.rg = body.rg
@@ -54,17 +114,17 @@ export default class PessoasController {
     return pessoa
   }
 
-  async login({request}: HttpContext){
+  async login({ request }: HttpContext) {
     const body = request.body()
 
     const id = body.id
-    const pessoa =  await Pessoa.findOrFail(id)
+    const pessoa = await Pessoa.findOrFail(id)
     console.log(pessoa)
     const token = await Pessoa.accessTokens.create(pessoa)
 
     return token
   }
-
+  
   async destroy({ params }: HttpContext) {
     const pessoa = await Pessoa.findOrFail(params.id)
     pessoa.deletadoEm = DateTime.now()

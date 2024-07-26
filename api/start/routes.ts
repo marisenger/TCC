@@ -32,7 +32,9 @@ router.get('/', async () => {
 
 //ROTAS DO ADMINISTRADOR
 router.resource('/administradores', AdministradoresController).apiOnly()
-router.post('/administradores/:pessoa_id/:clinica_id/teste', [AdministradoresController, 'store'])
+router.post('/administradores/AlterarSalario', [AdministradoresController, 'AlteraSalario'])
+router.post('administradores/Demitir', [AdministradoresController, 'Demitir'])
+//router.post('/administradores/:pessoa_id/:clinica_id/teste', [AdministradoresController, 'store'])
 
 //ROTAS DA ADOÇÂO
 router.resource('/adocoes', AdocoesController).apiOnly()
@@ -62,7 +64,9 @@ router.post('funcionarios/:pessoa_id/:clinica_id/:administrador_id', [Funcionari
 
 //ROTA DA PESSOA
 router.resource('/pessoas', PessoasController).apiOnly()
+router.post('/pessoas/:perfil', [PessoasController, 'criar'])
 router.post('/login', [PessoasController, 'login'])
+router.put('/pessoas/atualizar', [PessoasController,'atualizar'] )
 
 //ROTAS DO REGISTRO
 router.resource('/registros', RegistroController).apiOnly()
@@ -80,23 +84,18 @@ router.post('/veterinarios/:funcionario_id', [VeterinarioController, 'store'])
 router.resource('/voluntarios', VoluntarioController).apiOnly()
 router.post('/voluntarios/:funcionario_id', [VoluntarioController, 'store'])
 
-
 /**
  * TODO
  * utilizar os middleware para verificação de rotas
- * pedir ajuda do vitinho
+ * adsdad
  */
-router.get('/todasPessoasTeste',  async ({ auth }) => {
-  console.log(auth.user) // User
-  console.log(auth.authenticatedViaGuard) // 'api'
-  console.log(auth.user!.currentAccessToken) // AccessToken
-})
-.use(middleware.auth({
-  guards: ['api']
-}))
-
-
-
-
-
-
+router .get('/todasPessoasTeste',  async ({ auth }) => {
+    console.log(auth.user) // User
+    console.log(auth.authenticatedViaGuard) // 'api'
+    console.log(auth.user!.currentAccessToken) // AccessToken
+  })
+  .use(
+    middleware.auth({
+      guards: ['api'],
+    })
+  )

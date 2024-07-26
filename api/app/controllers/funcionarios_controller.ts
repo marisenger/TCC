@@ -30,7 +30,9 @@ export default class FuncinariosController {
   async show({ params }: HttpContext) {
     const funcionario = await Funcionario.findOrFail(params.id)
 
-    return funcionario
+    return {
+      'funcionario' : funcionario
+    }
   }
 
   async update({ request, params }: HttpContext) {
