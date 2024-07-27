@@ -36,6 +36,8 @@ export default class Pessoa extends BaseModel {
   @column()
   declare sexo: string
 
+  @column()
+  declare cargo: string
   @column.dateTime({ autoCreate: true })
   declare criadoEm: DateTime
 

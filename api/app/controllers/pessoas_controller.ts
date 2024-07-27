@@ -1,11 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
-import Pessoa from "#models/pessoa"
-import Voluntario from "#models/voluntario"
-import Cliente from "#models/cliente"
-import Veterinario from "#models/veterinario"
-import Administrador from "#models/administrador"
-import Funcionario from "#models/funcionario"
+import Pessoa from '#models/pessoa'
+import Voluntario from '#models/voluntario'
+import Cliente from '#models/cliente'
+import Veterinario from '#models/veterinario'
+import Administrador from '#models/administrador'
+import Funcionario from '#models/funcionario'
 
 /* TODO
   Organizar o select{
@@ -31,6 +31,7 @@ export default class PessoasController {
     pessoa.senha = body.senha
     pessoa.data_nascimento = body.dataNascimento
     pessoa.sexo = body.sexo
+    pessoa.cargo = params.perfil
     pessoa.criadoEm = DateTime.now()
 
     await pessoa.save()
@@ -124,7 +125,7 @@ export default class PessoasController {
 
     return token
   }
-  
+
   async destroy({ params }: HttpContext) {
     const pessoa = await Pessoa.findOrFail(params.id)
     pessoa.deletadoEm = DateTime.now()

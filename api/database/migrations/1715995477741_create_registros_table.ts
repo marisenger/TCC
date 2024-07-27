@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.dateTime('data_registro')
       table.integer('voluntario_id').unsigned().references('voluntarios.id').onDelete('CASCADE')
       table.integer('veterinario_id').unsigned().references('veterinarios.id').onDelete('CASCADE')
+      table.integer('animal_id').unsigned().references('animais.id').onDelete('CASCADE')
       table.timestamp('criado_em')
       table.timestamp('deletado_em')
     })

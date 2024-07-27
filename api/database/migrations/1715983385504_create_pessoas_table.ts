@@ -13,6 +13,7 @@ export default class extends BaseSchema {
       table.string('senha')
       table.dateTime('data_nascimento')
       table.string('sexo')
+      table.string('cargo')
       table.timestamp('criado_em')
       table.timestamp('deletado_em')
     })

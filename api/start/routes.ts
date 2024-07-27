@@ -56,7 +56,7 @@ router.post('/doacoes/:cliente_id/:voluntario_id/teste', [DoacoesController, 'st
 
 //ROTAs DO ENDEREÇOS
 router.resource('/enderecos', EnderecosController).apiOnly()
-router.post('/enderecos/:clinica_id/:pessoa_id/teste', [EnderecosController, 'store'])
+router.post('/enderecos/:clinica_id/:pessoa_id/teste', [EnderecosController, 'store']).
 
 //ROTAS DO FUNCIONARIO
 router.resource('/funcionarios', FuncionariosController).apiOnly()

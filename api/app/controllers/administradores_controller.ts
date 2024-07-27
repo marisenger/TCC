@@ -13,7 +13,7 @@ export default class AdministradoresController {
 
   async AlteraSalario({ request } : HttpContext){
     const body = request.body()
-    
+
     const funcionario = (await Funcionario.query().where('id', body.funcionario_id))[0]
     const salarioNovo = body.salarioNovo
 
@@ -22,12 +22,12 @@ export default class AdministradoresController {
     funcionario.save()
   }
 
-  async Demitir({ request }: HttpContext){
+  async Demitir({ request }: HttpContext) {
     const body = request.body()
-    
+
     const funcionario = (await Funcionario.query().where('id', body.funcionario_id))[0]
 
-    funcionario.deletadoEm = DateTime.now() 
+    funcionario.deletadoEm = DateTime.now()
 
     funcionario.save()
   }
