@@ -23,6 +23,8 @@ const AdministradoresController = () => import('#controllers/administradores_con
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import Administrador from '#models/administrador'
+import { administrador, veterinario, voluntario } from '#abilities/main'
 
 router.get('/', async () => {
   return {
@@ -33,11 +35,7 @@ router.get('/', async () => {
 //ROTAS DO ADMINISTRADOR
 router.resource('/administradores', AdministradoresController).apiOnly()
 router.post('/administradores/AlterarSalario', [AdministradoresController, 'AlteraSalario'])
-router.post('administradores/Demitir', [AdministradoresController, 'Demitir']).middleware(async ({ auth, bouncer }, next) => {
-  await auth.use('api').authenticate()
-  await bouncer.with('UserPolicy').authorize('admin')
-  await next()
-})
+router.post('administradores/Demitir', [AdministradoresController, 'Demitir'])
 //router.post('/administradores/:pessoa_id/:clinica_id/teste', [AdministradoresController, 'store'])
 
 //ROTAS DA ADOÇÂO
@@ -97,13 +95,15 @@ router.post('/voluntarios/AdicionaRegistro/:voluntario_id', [VoluntarioControlle
  * utilizar os middleware para verificação de rotas
  * adsdad
  */
-router .get('/todasPessoasTeste',  async ({ auth }) => {
-    console.log(auth.user) // User
-    console.log(auth.authenticatedViaGuard) // 'api'
-    console.log(auth.user!.currentAccessToken) // AccessToken
-  })
-  .use(
-    middleware.auth({
-      guards: ['api'],
-    })
-  )
+
+router.put('/testeAltenticacao', async ({ bouncer, params, response }) => {
+  const adm = await Administrador.findOrFail(params.id)
+
+  if (await bouncer.allows(administrador, adm)) {
+    return 'Você é um administrador'
+  }
+
+  return response.forbidden('Você não tem permissão para acessar essa rota')
+})
+
+router.get('/teste', [PessoasController, 'create'])

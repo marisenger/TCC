@@ -6,6 +6,7 @@ import Cliente from '#models/cliente'
 import Veterinario from '#models/veterinario'
 import Administrador from '#models/administrador'
 import Funcionario from '#models/funcionario'
+import user_policy from '#policies/user_policy'
 
 /* TODO
   Organizar o select{
@@ -16,6 +17,17 @@ import Funcionario from '#models/funcionario'
 
 export default class PessoasController {
   async index() {
+    const pessoas = await Pessoa.all()
+
+    return pessoas
+  }
+
+  async create({ bouncer, response }: HttpContext) {
+    if (await bouncer.with(user_policy).denies('admin')) {
+      return response.forbidden('Cannot create a post')
+    }
+
+    //Continue with the controller logic
     const pessoas = await Pessoa.all()
 
     return pessoas
