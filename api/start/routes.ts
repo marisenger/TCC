@@ -33,7 +33,11 @@ router.get('/', async () => {
 //ROTAS DO ADMINISTRADOR
 router.resource('/administradores', AdministradoresController).apiOnly()
 router.post('/administradores/AlterarSalario', [AdministradoresController, 'AlteraSalario'])
-router.post('administradores/Demitir', [AdministradoresController, 'Demitir'])
+router.post('administradores/Demitir', [AdministradoresController, 'Demitir']).middleware(async ({ auth, bouncer }, next) => {
+  await auth.use('api').authenticate()
+  await bouncer.with('UserPolicy').authorize('admin')
+  await next()
+})
 //router.post('/administradores/:pessoa_id/:clinica_id/teste', [AdministradoresController, 'store'])
 
 //ROTAS DA ADOÇÂO
@@ -56,7 +60,7 @@ router.post('/doacoes/:cliente_id/:voluntario_id/teste', [DoacoesController, 'st
 
 //ROTAs DO ENDEREÇOS
 router.resource('/enderecos', EnderecosController).apiOnly()
-router.post('/enderecos/:clinica_id/:pessoa_id/teste', [EnderecosController, 'store']).
+router.post('/enderecos/:clinica_id/:pessoa_id/teste', [EnderecosController, 'store'])
 
 //ROTAS DO FUNCIONARIO
 router.resource('/funcionarios', FuncionariosController).apiOnly()
@@ -78,11 +82,15 @@ router.post('/telefones/:clinica_id/:pessoa_id/teste', [TelefonesController, 'st
 
 //ROTA DO VETERINARIO
 router.resource('/veterinarios', VeterinarioController).apiOnly()
-router.post('/veterinarios/:funcionario_id', [VeterinarioController, 'store'])
+router.post('/veterinarios/AdicionaAnimail', [VeterinarioController, 'AdicionaAnimal'])
+router.post('/veterinarios/AlteraAnimal/:animal_id', [VeterinarioController, 'AlteraAnimal'])
+router.post('/veterinarios/AdicionaRegistro/:veterinario_id', [VeterinarioController, 'AdicionaRegistro'])
 
 //ROTA DO VOLUNTARIO
 router.resource('/voluntarios', VoluntarioController).apiOnly()
-router.post('/voluntarios/:funcionario_id', [VoluntarioController, 'store'])
+router.post('/voluntarios/AdicionaAnimail', [VoluntarioController, 'AdicionaAnimal'])
+router.post('/voluntarios/AlteraAnimal/:animal_id', [VoluntarioController, 'AlteraAnimal'])
+router.post('/voluntarios/AdicionaRegistro/:voluntario_id', [VoluntarioController, 'AdicionaRegistro'])
 
 /**
  * TODO

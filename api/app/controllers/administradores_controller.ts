@@ -1,4 +1,3 @@
-import Administrador from '#models/administrador'
 import Funcionario from '#models/funcionario'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'

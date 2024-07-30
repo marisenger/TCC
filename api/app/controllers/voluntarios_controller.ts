@@ -12,15 +12,7 @@ export default class VoluntariosController {
     return voluntario
   }
 
-  async store({ params }: HttpContext) {
-    let voluntario = new Voluntario()
-
-    voluntario.funcionario_id = params.funcionario_id
-    voluntario.criadoEm = DateTime.now()
-
-    await voluntario.save()
-  }
-
+  
   async AdicionaAnimal({ request }: HttpContext) {
     const body = request.body()
 
@@ -47,11 +39,11 @@ export default class VoluntariosController {
     registro.autor = body.autor
     registro.informacoes = body.informacoes
     registro.tipoRegistro = body.tipoRegistro
+    registro.dataRegistro = DateTime.now()
     registro.voluntario_id = params.voluntario_id
     registro.veterinario_id = params.veterinario_id
     registro.animal_id = body.animal_id
     registro.criadoEm = DateTime.now()
-    registro.deletadoEm = DateTime.now()
 
     await registro.save()
   }
@@ -59,7 +51,7 @@ export default class VoluntariosController {
   async AlteraAnimal({ request, params }: HttpContext) {
     const body = request.body()
 
-    let animal = await Animal.findOrFail(params.id)
+    let animal = await Animal.findOrFail(params.animal_id)
 
     animal.nome = body.nome
     animal.sexo = body.sexo
@@ -74,6 +66,16 @@ export default class VoluntariosController {
     await animal.save()
   }
   /*
+
+  async store({ params }: HttpContext) {
+    let voluntario = new Voluntario()
+
+    voluntario.funcionario_id = params.funcionario_id
+    voluntario.criadoEm = DateTime.now()
+
+    await voluntario.save()
+  }
+    
   async show({ params }: HttpContext) {
     const voluntario = await Voluntario.findOrFail(params.id)
     return voluntario

@@ -1,4 +1,3 @@
-import Veterinario from '#models/veterinario'
 import Registro from '#models/registro'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
@@ -37,11 +36,11 @@ export default class VeterinariosController {
     registro.autor = body.autor
     registro.informacoes = body.informacoes
     registro.tipoRegistro = body.tipoRegistro
+    registro.dataRegistro = DateTime.now()
     registro.voluntario_id = params.voluntario_id
     registro.veterinario_id = params.veterinario_id
     registro.animal_id = body.animal_id
     registro.criadoEm = DateTime.now()
-    registro.deletadoEm = DateTime.now()
 
     await registro.save()
   }
@@ -49,7 +48,7 @@ export default class VeterinariosController {
   async AlteraAnimal({ request, params }: HttpContext) {
     const body = request.body()
 
-    let animal = await Animal.findOrFail(params.id)
+    let animal = await Animal.findOrFail(params.animal_id)
 
     animal.nome = body.nome
     animal.sexo = body.sexo
