@@ -25,6 +25,8 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 import Administrador from '#models/administrador'
 import { administrador, veterinario, voluntario } from '#abilities/main'
+import db from '@adonisjs/lucid/services/db'
+import Pessoa from '#models/pessoa'
 
 router.get('/', async () => {
   return {
@@ -96,14 +98,17 @@ router.post('/voluntarios/AdicionaRegistro/:voluntario_id', [VoluntarioControlle
  * adsdad
  */
 
-router.put('/testeAltenticacao', async ({ bouncer, params, response }) => {
-  const adm = await Administrador.findOrFail(params.id)
-
-  if (await bouncer.allows(administrador, adm)) {
+router.put('/testeAltenticacao/:id', async ({ bouncer, params, response, request }) => {
+  const body = request.body()
+  const adm = await Administrador.findOrFail(body.id)
+  const pessoa = await Pessoa.findOrFail(adm.pessoa_id)
+  console.log('----' + adm.clinica_id + '-----')
+  if (await bouncer.allows(administrador, pessoa)) {
     return 'Você é um administrador'
   }
 
-  return response.forbidden('Você não tem permissão para acessar essa rota')
+  return adm
+  //response.forbidden('Você não tem permissão para acessar essa rota')
 })
 
-router.get('/teste', [PessoasController, 'create'])
+router.post('/teste', [PessoasController, 'create'])

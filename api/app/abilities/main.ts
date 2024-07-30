@@ -4,9 +4,10 @@ import Pessoa from '#models/pessoa'
 import Veterinario from '#models/veterinario'
 import { Bouncer } from '@adonisjs/bouncer'
 
-export const administrador = Bouncer.ability((pessoa: Pessoa, admin: Administrador) => {
-  const pessoaPesquisada = Pessoa.findOrFail(admin.pessoa_id)
-  return pessoa.cargo === pessoaPesquisada.cargo && pessoa.id === admin.pessoa_id
+export const administrador = Bouncer.ability(async (pessoa: Pessoa, p: Pessoa) => {
+  //const pessoaPesquisada = await Pessoa.findOrFail(admin.pessoa_id)
+  console.log("asdadasdasdasdasdasdas")
+  return p.cargo === 'adm' && pessoa.id === p.id
 })
 
 export const veterinario = Bouncer.ability((pessoa: Pessoa, funcionario: Funcionario) => {

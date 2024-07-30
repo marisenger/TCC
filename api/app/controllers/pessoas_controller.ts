@@ -22,8 +22,13 @@ export default class PessoasController {
     return pessoas
   }
 
-  async create({ bouncer, response }: HttpContext) {
-    if (await bouncer.with(user_policy).denies('admin')) {
+  async create({ bouncer, request, response }: HttpContext) {
+    const body = request.body()
+
+    const voluntario = await Voluntario.findOrFail(body.id)
+    const funcionario = await Funcionario.findOrFail(voluntario.funcionario_id)
+
+    if (await bouncer.with(user_policy).denies('voluntario', funcionario)) {
       return response.forbidden('Cannot create a post')
     }
 
@@ -34,6 +39,20 @@ export default class PessoasController {
   }
 
   async criar({ request, params }: HttpContext) {
+    const body = request.body()
+    let pessoa = new Pessoa()
+    pessoa.nome = body.nome
+    pessoa.cpf = body.cpf
+    pessoa.rg = body.rg
+    pessoa.email = body.email
+    pessoa.senha = body.senha
+    pessoa.data_nascimento = body.dataNascimento
+    pessoa.sexo = body.sexo
+    pessoa.cargo = params.perfil
+    pessoa.criadoEm = DateTime.now()
+    if(params.perfil === 'adm'){
+
+    }
     const body = request.body()
     let pessoa = new Pessoa()
     pessoa.nome = body.nome
@@ -61,7 +80,6 @@ export default class PessoasController {
         administrador.criadoEm = DateTime.now()
 
         await administrador.save()
-        return administrador
 
         break
       case 'func':
@@ -73,8 +91,6 @@ export default class PessoasController {
 
         await funcionario.save()
 
-        return funcionario
-
         break
       case 'vet':
         veterinario.funcionario_id = body.funcionario_id
@@ -83,15 +99,13 @@ export default class PessoasController {
 
         await veterinario.save()
 
-        return veterinario
-
         break
       case 'vol':
         voluntario.funcionario_id = body.funcionario_id
         voluntario.criadoEm = DateTime.now()
 
         await voluntario.save()
-        return voluntario
+
         break
       case 'cli':
         cliente.pessoa_id = pessoa.id
@@ -100,7 +114,6 @@ export default class PessoasController {
 
         await cliente.save()
 
-        return cliente
         break
     }
   }
