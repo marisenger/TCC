@@ -67,10 +67,11 @@ router.resource('/funcionarios', FuncionariosController).apiOnly()
 router.post('funcionarios/:pessoa_id/:clinica_id/:administrador_id', [FuncionariosController, 'store',])
 
 //ROTA DA PESSOA
-router.resource('/pessoas', PessoasController).apiOnly()
+//router.resource('/pessoas', PessoasController).apiOnly()
+router.get('/pessoas/todasPessoas', [PessoasController, 'index'])
 router.post('/pessoas/:perfil', [PessoasController, 'criar'])
 router.post('/login', [PessoasController, 'login'])
-router.put('/pessoas/atualizar', [PessoasController,'atualizar'] )
+router.put('/pessoas/atualizar', [PessoasController,'atualizar'] ).use(middleware.auth({guards: ['api'],}))
 
 //ROTAS DO REGISTRO
 router.resource('/registros', RegistroController).apiOnly()
@@ -103,6 +104,12 @@ router .get('/todasPessoasTeste',  async ({ auth }) => {
     console.log(auth.user!.currentAccessToken) // AccessToken
   })
   .use(
+    middleware.auth({
+      guards: ['api'],
+    })
+  )
+
+  router.get('/pessoasTeste', [PessoasController, 'todasPessoas']).use(
     middleware.auth({
       guards: ['api'],
     })

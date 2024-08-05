@@ -51,4 +51,17 @@ export default class Pessoa extends BaseModel {
     type: 'auth_token',
     tokenSecretLength: 40,
   })
+
+  static VerificaAdmin(pessoa: Pessoa){
+    if(pessoa.cargo == 'adm')
+      return true
+    return false 
+
+  }
+
+  static VerificaFuncionario(pessoa: Pessoa){
+    if(pessoa.cargo == "vet" || pessoa.cargo == "vol") 
+      return true
+    return false
+  }
 }
