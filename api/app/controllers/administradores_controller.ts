@@ -2,6 +2,7 @@ import Funcionario from '#models/funcionario'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
+import Administrador from '#models/administrador'
 
 export default class AdministradoresController {
   async index() {
@@ -10,7 +11,12 @@ export default class AdministradoresController {
     return administradores
   }
 
-  async AlteraSalario({ request } : HttpContext){
+  async show({ params }: HttpContext) {
+    const administrador = await Administrador.findOrFail(params.id)
+    return administrador
+  }
+
+  async AlteraSalario({ request }: HttpContext) {
     const body = request.body()
 
     const funcionario = (await Funcionario.query().where('id', body.funcionario_id))[0]

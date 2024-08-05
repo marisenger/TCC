@@ -12,6 +12,9 @@ const authConfig = defineConfig({
       }),
     }),
   },
+  policies: {
+    isAdmin: (user) => user.role === 'admin', // Adicione sua lógica de política aqui
+  }
 })
 
 export default authConfig

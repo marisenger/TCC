@@ -23,6 +23,10 @@ const AdministradoresController = () => import('#controllers/administradores_con
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import Administrador from '#models/administrador'
+import { administrador, veterinario, voluntario } from '#abilities/main'
+import db from '@adonisjs/lucid/services/db'
+import Pessoa from '#models/pessoa'
 
 router.get('/', async () => {
   return {
@@ -33,11 +37,7 @@ router.get('/', async () => {
 //ROTAS DO ADMINISTRADOR
 router.resource('/administradores', AdministradoresController).apiOnly()
 router.post('/administradores/AlterarSalario', [AdministradoresController, 'AlteraSalario'])
-router.post('administradores/Demitir', [AdministradoresController, 'Demitir']).middleware(async ({ auth, bouncer }, next) => {
-  await auth.use('api').authenticate()
-  await bouncer.with('UserPolicy').authorize('admin')
-  await next()
-})
+router.post('administradores/Demitir', [AdministradoresController, 'Demitir'])
 //router.post('/administradores/:pessoa_id/:clinica_id/teste', [AdministradoresController, 'store'])
 
 //ROTAS DA ADOÇÂO
@@ -68,7 +68,7 @@ router.post('funcionarios/:pessoa_id/:clinica_id/:administrador_id', [Funcionari
 
 //ROTA DA PESSOA
 //router.resource('/pessoas', PessoasController).apiOnly()
-router.get('/pessoas/todasPessoas', [PessoasController, 'index'])
+router.get('/pessoas/todasPessoas', [PessoasController, 'todasPessoas'])
 router.post('/pessoas/:perfil', [PessoasController, 'criar'])
 router.post('/login', [PessoasController, 'login'])
 router.put('/pessoas/atualizar', [PessoasController,'atualizar'] ).use(middleware.auth({guards: ['api'],}))
@@ -114,3 +114,4 @@ router .get('/todasPessoasTeste',  async ({ auth }) => {
       guards: ['api'],
     })
   )
+

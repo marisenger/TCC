@@ -6,6 +6,7 @@ import Cliente from '#models/cliente'
 import Veterinario from '#models/veterinario'
 import Administrador from '#models/administrador'
 import Funcionario from '#models/funcionario'
+import user_policy from '#policies/user_policy'
 
 /* TODO
   Organizar o select{
@@ -15,11 +16,6 @@ import Funcionario from '#models/funcionario'
 */
 
 export default class PessoasController {
-  async index() {
-    const pessoas = await Pessoa.all()
-
-    return pessoas
-  }
 
   async todasPessoas(){
     const pessoas = await Pessoa.all()
@@ -40,8 +36,6 @@ export default class PessoasController {
     pessoa.cargo = params.perfil
     pessoa.criadoEm = DateTime.now()
 
-    await pessoa.save()
-
     let voluntario = new Voluntario()
     let cliente = new Cliente()
     let veterinario = new Veterinario()
@@ -55,7 +49,6 @@ export default class PessoasController {
         administrador.criadoEm = DateTime.now()
 
         await administrador.save()
-        return administrador
 
         break
       case 'func':
@@ -67,8 +60,6 @@ export default class PessoasController {
 
         await funcionario.save()
 
-        return funcionario
-
         break
       case 'vet':
         veterinario.funcionario_id = body.funcionario_id
@@ -77,15 +68,13 @@ export default class PessoasController {
 
         await veterinario.save()
 
-        return veterinario
-
         break
       case 'vol':
         voluntario.funcionario_id = body.funcionario_id
         voluntario.criadoEm = DateTime.now()
 
         await voluntario.save()
-        return voluntario
+
         break
       case 'cli':
         cliente.pessoa_id = pessoa.id
@@ -94,7 +83,6 @@ export default class PessoasController {
 
         await cliente.save()
 
-        return cliente
         break
     }
   }
